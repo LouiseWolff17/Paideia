@@ -32,6 +32,17 @@ impl Config {
         Ok(Self { bind, data_dir, web_dist, anthropic_api_key })
     }
 
+    /// Defaults for tests: no AI key, nothing read from the environment.
+    #[cfg(test)]
+    pub fn for_tests() -> Self {
+        Self {
+            bind: "127.0.0.1:0".parse().unwrap(),
+            data_dir: PathBuf::from("./unused-in-tests"),
+            web_dist: PathBuf::from("./unused-in-tests"),
+            anthropic_api_key: None,
+        }
+    }
+
     pub fn ai_configured(&self) -> bool {
         self.anthropic_api_key.is_some()
     }

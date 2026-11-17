@@ -5,10 +5,15 @@
 //! (design doc §6, "Architectural boundaries").
 
 pub mod api;
+pub mod catalog;
 pub mod evidence;
 pub mod stage;
 pub mod strategy;
 
+pub use catalog::{
+    Concept, ConceptId, ConceptInput, Material, MaterialId, MaterialInput, MaterialKind, Subject,
+    SubjectId, SubjectInput, ValidationError,
+};
 pub use evidence::EvidenceDimension;
 pub use stage::{LearningStage, StageTransitionError, TransitionCause};
 pub use strategy::TeachingStrategy;

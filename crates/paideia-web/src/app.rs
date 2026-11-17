@@ -7,7 +7,10 @@ use paideia_core::Area;
 
 use crate::{
     api,
-    pages::{Home, Learn, NotFound, Placeholder, PreferencesPreview, ProgressPreview},
+    pages::{
+        ConceptPage, Explore, Home, Learn, NotFound, Placeholder, PreferencesPreview,
+        ProgressPreview, SubjectPage,
+    },
 };
 
 #[component]
@@ -42,10 +45,9 @@ pub fn App() -> impl IntoView {
                             path=path!("/remember")
                             view=|| view! { <Placeholder area=Area::Remember when="milestone 5" /> }
                         />
-                        <Route
-                            path=path!("/explore")
-                            view=|| view! { <Placeholder area=Area::Explore when="milestone 2" /> }
-                        />
+                        <Route path=path!("/explore") view=Explore />
+                        <Route path=path!("/explore/subjects/:id") view=SubjectPage />
+                        <Route path=path!("/explore/concepts/:id") view=ConceptPage />
                         <Route
                             path=path!("/tasks")
                             view=|| view! { <Placeholder area=Area::MyTasks when="a later milestone" /> }

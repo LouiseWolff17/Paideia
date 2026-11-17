@@ -3,10 +3,11 @@
 A calm, local-first learning space that helps a university student understand
 difficult ideas, remember them, and turn big tasks into small next steps.
 
-This is **Milestone 1: Foundation**. It has a Rust workspace, a Leptos web
-interface with the six main areas, a local Axum server with a health check,
-and the shared domain types (learning stages, teaching strategies, evidence
-dimensions).
+This is **Milestone 2: Core learning data**. On top of the foundation (Rust
+workspace, Leptos interface with the six main areas, local Axum server, shared
+domain types), you can now create, edit and delete subjects, the concepts
+inside them, and your own text material for each concept, all stored in a
+local SQLite database.
 
 ## Layout
 
@@ -17,7 +18,8 @@ paideia/
 ├── .env.example          copy to .env (never commit .env)
 └── crates/
     ├── paideia-core/     domain types and deterministic rules (no UI/AI/DB code)
-    ├── paideia-server/   Axum server: /api, and serves the built interface
+    ├── paideia-server/   Axum server: /api, SQLite storage, serves the built interface
+    │   └── migrations/   database schema, applied automatically at startup
     └── paideia-web/      Leptos frontend, compiled to WebAssembly with Trunk
 ```
 
@@ -55,8 +57,16 @@ cargo run --release -p paideia-server
 ## Tests
 
 ```sh
-cargo test -p paideia-core
+cargo test
 ```
+
+Server tests use a private in-memory database, so they never touch your data.
+
+## Your data
+
+Everything is stored in `data/paideia.db` (or in `PAIDEIA_DATA_DIR`). To back
+up, stop the server and copy the whole `data` folder. To start fresh, stop the
+server and delete it.
 
 ## Privacy notes
 
@@ -70,8 +80,8 @@ cargo test -p paideia-core
 The full design (goals, learning model, data model, requirements) is in
 [DESIGN.md](DESIGN.md).
 
-1. **Foundation** ← you are here
-2. Core learning data: subjects, concepts, SQLite, manual text material
+1. Foundation ✓
+2. **Core learning data** ← you are here: subjects, concepts, SQLite, manual text material
 3. First tutoring session: Anthropic adapter, structured explanations
 4. Practice and adaptation: exercises, attempts, strategy selection
 5. Remember and progress: review scheduling, evidence, history

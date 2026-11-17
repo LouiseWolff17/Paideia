@@ -322,8 +322,8 @@ Calm, warm and gently encouraging rather than childish or overly gamified.
 | # | Milestone | Scope | Status |
 |---|---|---|---|
 | 1 | Foundation | Rust workspace, Leptos frontend, Axum server, local configuration, health endpoint, visual shell and navigation. | Done |
-| 2 | Core learning data | Subjects, concepts, SQLite persistence, basic create/read/update/delete flows, manual text material. | Next |
-| 3 | First tutoring session | Connect the server to Anthropic, a safe provider adapter, structured explanations, examples and questions. | |
+| 2 | Core learning data | Subjects, concepts, SQLite persistence, basic create/read/update/delete flows, manual text material. | Done |
+| 3 | First tutoring session | Connect the server to Anthropic, a safe provider adapter, structured explanations, examples and questions. | Next |
 | 4 | Practice and adaptation | Guided and independent exercises, attempt recording, feedback, basic strategy selection. | |
 | 5 | Remember and progress | Review scheduling, evidence dimensions, session history, a simple progress view. | |
 | 6 | Polish and import | Accessibility, error handling, export/delete flows, PDF/slide text extraction. | |
@@ -346,8 +346,8 @@ response.
 
 ### MVP acceptance criteria
 
-- [ ] A subject and its concepts can be created, edited and stored locally.
-- [ ] A learner can add text manually and associate it with a concept.
+- [x] A subject and its concepts can be created, edited and stored locally.
+- [x] A learner can add text manually and associate it with a concept.
 - [ ] The learner can request an explanation and a concrete example through the local server.
 - [ ] The learner can answer a guided or independent exercise and receive feedback.
 - [ ] The session and attempt history persist after the application is closed.

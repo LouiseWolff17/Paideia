@@ -24,6 +24,10 @@ tower-http = { version = "0.6", features = ["fs", "trace"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 dotenvy = "0.15"
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio", "sqlite", "migrate", "macros"] }
+# Server tests only
+tower = { version = "0.5", features = ["util"] }
+http-body-util = "0.1"
 
 # Web (compiled to WebAssembly by Trunk)
 leptos = { version = "0.8", features = ["csr"] }

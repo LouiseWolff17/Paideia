@@ -3,23 +3,31 @@
 //! Serves the JSON API under `/api` and, in production, the built web interface.
 //! Listens on loopback only by default (design doc §8, security requirements).
 
+mod catalog;
 mod config;
+mod db;
+mod error;
+mod store;
+#[cfg(test)]
+mod tests;
 
 use std::sync::Arc;
 
 use axum::{extract::State, routing::get, Json, Router};
 use paideia_core::api::HealthResponse;
+use sqlx::SqlitePool;
 use tower_http::{
     services::{ServeDir, ServeFile},
     trace::TraceLayer,
 };
 use tracing_subscriber::EnvFilter;
 
-use crate::config::Config;
+use crate::{config::Config, error::AppError};
 
 #[derive(Clone)]
 struct AppState {
     config: Arc<Config>,
+    db: SqlitePool,
 }
 
 #[tokio::main]
@@ -56,8 +64,19 @@ async fn main() {
 
     tracing::info!(?config, "starting Paideia");
 
+    let db = match db::open(&config.data_dir).await {
+        Ok(db) => db,
+        Err(e) => {
+            eprintln!(
+                "Could not open the database in {:?}: {e}",
+                config.data_dir.join(db::DB_FILE_NAME)
+            );
+            std::process::exit(1);
+        }
+    };
+
     let bind = config.bind;
-    let app = router(AppState { config: Arc::new(config) });
+    let app = router(AppState { config: Arc::new(config), db: db.clone() });
 
     let listener = tokio::net::TcpListener::bind(bind)
         .await
@@ -71,10 +90,17 @@ async fn main() {
         })
         .await
         .expect("server error");
+
+    // Flush the write-ahead log so the database file is complete on its own.
+    db.close().await;
 }
 
 fn router(state: AppState) -> Router {
-    let api = Router::new().route("/health", get(health));
+    let api = Router::new()
+        .route("/health", get(health))
+        .merge(catalog::routes())
+        // Unknown API paths get a JSON 404, not the web interface's index.html.
+        .fallback(|| async { AppError::NoRoute });
 
     // Serve the built frontend, falling back to index.html so client-side
     // routes like /learn work when the page is reloaded.
