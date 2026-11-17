@@ -13,6 +13,7 @@ dimensions).
 ```
 paideia/
 ├── Cargo.toml            workspace
+├── DESIGN.md             project design and roadmap
 ├── .env.example          copy to .env (never commit .env)
 └── crates/
     ├── paideia-core/     domain types and deterministic rules (no UI/AI/DB code)
@@ -65,6 +66,9 @@ cargo test -p paideia-core
 * Configuration is never logged with the key; prompts and notes are never logged.
 
 ## Roadmap
+
+The full design (goals, learning model, data model, requirements) is in
+[DESIGN.md](DESIGN.md).
 
 1. **Foundation** ← you are here
 2. Core learning data: subjects, concepts, SQLite, manual text material
