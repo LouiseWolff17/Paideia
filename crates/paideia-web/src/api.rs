@@ -5,8 +5,9 @@
 use gloo_net::http::{Request, RequestBuilder, Response};
 use paideia_core::{
     api::{ApiError, HealthResponse},
-    Concept, ConceptId, ConceptInput, Material, MaterialId, MaterialInput, Subject, SubjectId,
-    SubjectInput,
+    Activity, ActivityRequest, AiStatus, Concept, ConceptId, ConceptInput, ConsentChange,
+    LearningStage, Material, MaterialId, MaterialInput, NewSession, SessionDetail, SessionId,
+    SessionSummary, StageChange, Subject, SubjectId, SubjectInput,
 };
 use serde::{de::DeserializeOwned, Serialize};
 
@@ -113,4 +114,44 @@ pub async fn update_material(id: MaterialId, input: MaterialInput) -> Result<Mat
 
 pub async fn delete_material(id: MaterialId) -> Result<(), String> {
     delete(&format!("/api/materials/{id}")).await
+}
+
+// AI settings
+
+pub async fn ai_status() -> Result<AiStatus, String> {
+    get("/api/ai").await
+}
+
+pub async fn set_ai_consent(consented: bool) -> Result<AiStatus, String> {
+    with_body(Request::put("/api/ai/consent"), &ConsentChange { consented }).await
+}
+
+// Learning sessions
+
+pub async fn recent_sessions(limit: u32) -> Result<Vec<SessionSummary>, String> {
+    get(&format!("/api/sessions?limit={limit}")).await
+}
+
+pub async fn concept_sessions(concept: ConceptId) -> Result<Vec<SessionSummary>, String> {
+    get(&format!("/api/concepts/{concept}/sessions")).await
+}
+
+pub async fn start_session(concept: ConceptId, material_ids: Vec<MaterialId>) -> Result<SessionSummary, String> {
+    with_body(Request::post(&format!("/api/concepts/{concept}/sessions")), &NewSession { material_ids }).await
+}
+
+pub async fn get_session(id: SessionId) -> Result<SessionDetail, String> {
+    get(&format!("/api/sessions/{id}")).await
+}
+
+pub async fn set_stage(id: SessionId, stage: LearningStage) -> Result<SessionSummary, String> {
+    with_body(Request::put(&format!("/api/sessions/{id}/stage")), &StageChange { stage }).await
+}
+
+pub async fn delete_session(id: SessionId) -> Result<(), String> {
+    delete(&format!("/api/sessions/{id}")).await
+}
+
+pub async fn ask_tutor(id: SessionId, request: ActivityRequest) -> Result<Activity, String> {
+    with_body(Request::post(&format!("/api/sessions/{id}/activities")), &request).await
 }

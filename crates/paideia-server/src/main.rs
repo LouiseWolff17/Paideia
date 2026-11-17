@@ -3,10 +3,13 @@
 //! Serves the JSON API under `/api` and, in production, the built web interface.
 //! Listens on loopback only by default (design doc §8, security requirements).
 
+mod ai;
 mod catalog;
 mod config;
 mod db;
 mod error;
+mod session_store;
+mod sessions;
 mod store;
 #[cfg(test)]
 mod tests;
@@ -22,12 +25,13 @@ use tower_http::{
 };
 use tracing_subscriber::EnvFilter;
 
-use crate::{config::Config, error::AppError};
+use crate::{ai::Tutor, config::Config, error::AppError};
 
 #[derive(Clone)]
 struct AppState {
     config: Arc<Config>,
     db: SqlitePool,
+    tutor: Arc<Tutor>,
 }
 
 #[tokio::main]
@@ -76,7 +80,8 @@ async fn main() {
     };
 
     let bind = config.bind;
-    let app = router(AppState { config: Arc::new(config), db: db.clone() });
+    let tutor = Arc::new(Tutor::from_config(&config));
+    let app = router(AppState { config: Arc::new(config), db: db.clone(), tutor });
 
     let listener = tokio::net::TcpListener::bind(bind)
         .await
@@ -99,6 +104,7 @@ fn router(state: AppState) -> Router {
     let api = Router::new()
         .route("/health", get(health))
         .merge(catalog::routes())
+        .merge(sessions::routes())
         // Unknown API paths get a JSON 404, not the web interface's index.html.
         .fallback(|| async { AppError::NoRoute });
 
@@ -118,6 +124,6 @@ async fn health(State(state): State<AppState>) -> Json<HealthResponse> {
     Json(HealthResponse {
         status: "ok".into(),
         version: env!("CARGO_PKG_VERSION").into(),
-        ai_configured: state.config.ai_configured(),
+        ai_configured: state.tutor.is_configured(),
     })
 }

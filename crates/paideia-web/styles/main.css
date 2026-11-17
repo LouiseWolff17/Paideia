@@ -431,6 +431,78 @@ main {
 .confirm { border-left: 5px solid var(--deep-pink); width: 100%; }
 .btn.danger { background: var(--deep-pink); color: #fff; }
 
+/* ---------- Learn: sessions and the tutor ---------- */
+
+.activity-list { display: flex; flex-direction: column; gap: 0.9rem; }
+.activity { display: flex; flex-direction: column; gap: 0.15rem; }
+.activity h3 { margin: 0 0 0.4rem; font-size: 1.2rem; line-height: 1.3; }
+.activity h4 {
+  margin: 0 0 0.3rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--deep-sage);
+}
+.you-asked {
+  margin: 0 0 0.6rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 10px;
+  background: var(--soft-pink);
+}
+.you-asked span { font-weight: 650; }
+.steps { margin: 0 0 0.9em; padding-left: 1.4rem; }
+.steps li { margin-bottom: 0.45rem; padding-left: 0.2rem; }
+.key-points,
+.check-question {
+  margin: 0.2rem 0 0.9em;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+}
+.key-points { background: var(--sage); }
+.key-points ul { margin: 0; padding-left: 1.2rem; }
+.check-question { background: var(--cream); border-left: 4px solid var(--deep-sage); }
+.check-question p { margin: 0; }
+.caveat { font-size: 0.95rem; color: var(--ink-soft); }
+
+.thinking {
+  margin: 0;
+  padding: 0.6rem 0.85rem;
+  border-radius: 10px;
+  background: var(--sage);
+}
+.follow-up { gap: 0.6rem; }
+
+.earlier summary,
+.how-it-works summary {
+  cursor: pointer;
+  color: var(--deep-pink);
+  font-weight: 600;
+  width: fit-content;
+}
+.earlier .activity-list { margin-top: 0.9rem; }
+.how-it-works[open] summary { margin-bottom: 0.6rem; }
+
+.consent h3 { font-size: 1rem; margin: 0 0 0.3rem; }
+.two-lists {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem;
+  margin-bottom: 0.9em;
+}
+.two-lists h3 { font-size: 1rem; margin: 0 0 0.3rem; }
+
+.checks { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.form label.check { flex-direction: row; align-items: baseline; gap: 0.6rem; font-weight: 500; }
+.form label.check input { width: auto; accent-color: var(--deep-pink); }
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 /* ---------- Motion: only gentle, and only if wanted ---------- */
 
 @media (prefers-reduced-motion: no-preference) {

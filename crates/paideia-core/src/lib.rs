@@ -9,6 +9,7 @@ pub mod catalog;
 pub mod evidence;
 pub mod stage;
 pub mod strategy;
+pub mod tutor;
 
 pub use catalog::{
     Concept, ConceptId, ConceptInput, Material, MaterialId, MaterialInput, MaterialKind, Subject,
@@ -17,6 +18,10 @@ pub use catalog::{
 pub use evidence::EvidenceDimension;
 pub use stage::{LearningStage, StageTransitionError, TransitionCause};
 pub use strategy::TeachingStrategy;
+pub use tutor::{
+    Activity, ActivityId, ActivityRequest, AiStatus, ConsentChange, LearningSession, NewSession,
+    SessionDetail, SessionId, SessionSummary, StageChange, TutorContent, TutorPlan,
+};
 
 /// The six main areas of the application (design doc §4).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]

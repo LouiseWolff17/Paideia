@@ -1,6 +1,6 @@
 //! Explore: browse and organise subjects, concepts and learning material.
 
-mod components;
+pub(crate) mod components;
 mod concept;
 mod subject;
 

@@ -52,10 +52,10 @@ fn TryLearn() -> impl IntoView {
     view! {
         <div class="card next-step">
             <p class="eyebrow">"Suggested next step"</p>
-            <h2>"See how a learning session works"</h2>
+            <h2>"Learn with the tutor"</h2>
             <p>
-                "Walk through the steps a session follows. You can go back, repeat "
-                "or skip ahead whenever you like."
+                "Pick up a session where you left off, or open a concept and start one. "
+                "You can go back, repeat or skip ahead whenever you like."
             </p>
             <A href="/learn">"Open Learn"</A>
         </div>

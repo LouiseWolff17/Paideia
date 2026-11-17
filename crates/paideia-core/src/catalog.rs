@@ -31,6 +31,7 @@ macro_rules! id_type {
         }
     };
 }
+pub(crate) use id_type;
 
 id_type!(
     /// Stable identifier of a [`Subject`]. Never reused after deletion.
@@ -178,7 +179,8 @@ impl fmt::Display for ValidationError {
 
 impl std::error::Error for ValidationError {}
 
-fn required(
+/// A required, trimmed text field. Also used by other modules' inputs.
+pub(crate) fn required_text(
     value: &str,
     field: &'static str,
     what: &str,
@@ -214,7 +216,7 @@ impl SubjectInput {
     /// Trim whitespace and check limits.
     pub fn validated(&self) -> Result<Self, ValidationError> {
         Ok(Self {
-            name: required(&self.name, "name", "name", NAME_MAX_CHARS)?,
+            name: required_text(&self.name, "name", "name", NAME_MAX_CHARS)?,
             description: optional(&self.description, "description", "description", DESCRIPTION_MAX_CHARS)?,
         })
     }
@@ -224,7 +226,7 @@ impl ConceptInput {
     /// Trim whitespace and check limits.
     pub fn validated(&self) -> Result<Self, ValidationError> {
         Ok(Self {
-            name: required(&self.name, "name", "name", NAME_MAX_CHARS)?,
+            name: required_text(&self.name, "name", "name", NAME_MAX_CHARS)?,
             summary: optional(&self.summary, "summary", "summary", DESCRIPTION_MAX_CHARS)?,
         })
     }
@@ -242,7 +244,7 @@ impl MaterialInput {
             });
         }
         Ok(Self {
-            title: required(&self.title, "title", "title", MATERIAL_TITLE_MAX_CHARS)?,
+            title: required_text(&self.title, "title", "title", MATERIAL_TITLE_MAX_CHARS)?,
             source: optional(&self.source, "source", "source", MATERIAL_SOURCE_MAX_CHARS)?,
             body: optional(body, "body", "text", MATERIAL_BODY_MAX_CHARS)?,
         })

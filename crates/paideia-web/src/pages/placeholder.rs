@@ -2,6 +2,23 @@ use leptos::prelude::*;
 use leptos_router::components::A;
 use paideia_core::{Area, EvidenceDimension};
 
+use crate::{api, pages::AiConsent};
+
+/// Allow or stop AI requests.
+#[component]
+fn AiSettings() -> impl IntoView {
+    let status = LocalResource::new(api::ai_status);
+    let latest = RwSignal::new(None);
+    view! {
+        <Suspense fallback=|| ()>
+            {move || {
+                let s = latest.get().or_else(|| status.get().and_then(Result::ok))?;
+                Some(view! { <AiConsent status=s always=true on_change=Callback::new(move |s| latest.set(Some(s))) /> })
+            }}
+        </Suspense>
+    }
+}
+
 /// A calm stand-in for an area that is not built yet.
 #[component]
 pub fn Placeholder(
@@ -49,12 +66,11 @@ pub fn PreferencesPreview() -> impl IntoView {
             <div class="card">
                 <h2>"Your data and the AI tutor"</h2>
                 <p>
-                    "Your subjects, notes, files and learning history are stored on this computer. "
-                    "When you ask the AI tutor for help, the text needed for that request "
-                    "(for example, part of your notes) is sent to Anthropic to be processed. "
-                    "Paideia will always ask before sending anything, and every non-AI feature works without it."
+                    "Your subjects, notes and learning history are stored on this computer. "
+                    "Every feature apart from the tutor's explanations works without AI."
                 </p>
             </div>
+            <AiSettings />
         </Placeholder>
     }
 }

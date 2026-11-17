@@ -159,6 +159,8 @@ fn ConceptDetails(concept: Concept, on_changed: Callback<()>) -> impl IntoView {
             />
         </Show>
 
+        <crate::pages::ConceptSessions concept=id />
+
         <MaterialSection concept=id />
 
         <div class="danger-zone">

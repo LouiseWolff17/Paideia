@@ -9,7 +9,7 @@ use crate::{
     api,
     pages::{
         ConceptPage, Explore, Home, Learn, NotFound, Placeholder, PreferencesPreview,
-        ProgressPreview, SubjectPage,
+        ProgressPreview, SessionPage, SubjectPage,
     },
 };
 
@@ -41,6 +41,7 @@ pub fn App() -> impl IntoView {
                     <Routes fallback=|| view! { <NotFound /> }>
                         <Route path=path!("/") view=Home />
                         <Route path=path!("/learn") view=Learn />
+                        <Route path=path!("/learn/sessions/:id") view=SessionPage />
                         <Route
                             path=path!("/remember")
                             view=|| view! { <Placeholder area=Area::Remember when="milestone 5" /> }

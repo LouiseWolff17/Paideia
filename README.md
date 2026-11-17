@@ -3,11 +3,13 @@
 A calm, local-first learning space that helps a university student understand
 difficult ideas, remember them, and turn big tasks into small next steps.
 
-This is **Milestone 2: Core learning data**. On top of the foundation (Rust
-workspace, Leptos interface with the six main areas, local Axum server, shared
-domain types), you can now create, edit and delete subjects, the concepts
-inside them, and your own text material for each concept, all stored in a
-local SQLite database.
+This is **Milestone 3: First tutoring session**. On top of subjects, concepts
+and your own text material (Milestone 2), you can now start a learning
+session on a concept, choose which of your material the tutor may use, and
+work through the stages with an AI tutor (Anthropic's Claude). The tutor gives
+structured explanations, examples and questions; you can ask your own
+questions or say "this doesn't make sense yet" and pick a different approach.
+Sessions and the tutor's replies are saved locally, so you can resume later.
 
 ## Layout
 
@@ -28,7 +30,7 @@ paideia/
 ```sh
 rustup target add wasm32-unknown-unknown
 cargo install trunk --locked
-cp .env.example .env        # add your Anthropic key later (Milestone 3)
+cp .env.example .env        # then add your Anthropic API key to use the tutor
 ```
 
 ## Running during development
@@ -68,12 +70,29 @@ Everything is stored in `data/paideia.db` (or in `PAIDEIA_DATA_DIR`). To back
 up, stop the server and copy the whole `data` folder. To start fresh, stop the
 server and delete it.
 
+## The AI tutor
+
+Set `ANTHROPIC_API_KEY` in `.env` and restart the server. Optional settings:
+`ANTHROPIC_MODEL` (default `claude-opus-5-5`) and `ANTHROPIC_EFFORT`
+(`low` … `max`, default `medium`).
+
+Before the first request, Paideia explains what is sent and asks you to agree
+(you can withdraw in Preferences). Each request contains only the concept, the
+material you ticked when starting that session, your question if you asked
+one, and the titles of earlier replies in the session. Replies must match a
+fixed JSON structure and are checked before they are saved or shown.
+
+Requests use structured outputs and Anthropic's server-side refusal fallback
+(`fallbacks: "default"`), so a declined request is retried on another model in
+the same call. Without a key, everything except the tutor's replies still works.
+
 ## Privacy notes
 
 * The server listens on `127.0.0.1` only, unless you change `PAIDEIA_BIND`.
 * The Anthropic key is read on the server and is never sent to the browser.
   `/api/health` only reports *whether* a key is set.
-* Configuration is never logged with the key; prompts and notes are never logged.
+* Configuration is never logged with the key; prompts, notes and tutor replies are never logged.
+* Nothing is sent to Anthropic until you have agreed and press a button that asks the tutor.
 
 ## Roadmap
 
@@ -81,8 +100,8 @@ The full design (goals, learning model, data model, requirements) is in
 [DESIGN.md](DESIGN.md).
 
 1. Foundation ✓
-2. **Core learning data** ← you are here: subjects, concepts, SQLite, manual text material
-3. First tutoring session: Anthropic adapter, structured explanations
+2. Core learning data ✓
+3. **First tutoring session** ← you are here: Anthropic adapter, structured explanations
 4. Practice and adaptation: exercises, attempts, strategy selection
 5. Remember and progress: review scheduling, evidence, history
 6. Polish and import: accessibility pass, export/delete, PDF/slides
