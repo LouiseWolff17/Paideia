@@ -1,0 +1,12 @@
+[build]
+target = "index.html"
+dist = "dist"
+
+[serve]
+addresses = ["127.0.0.1"]
+port = 8080
+
+# During development, Trunk serves the interface on :8080 and forwards
+# /api/ requests to the local Rust server on :3000.
+[[proxy]]
+backend = "http://127.0.0.1:3000/api/"

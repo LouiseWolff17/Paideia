@@ -1,0 +1,32 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/paideia-core",
+    "crates/paideia-server",
+    "crates/paideia-web",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[workspace.dependencies]
+paideia-core = { path = "crates/paideia-core" }
+
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Server
+axum = "0.8"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "signal"] }
+tower-http = { version = "0.6", features = ["fs", "trace"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+dotenvy = "0.15"
+
+# Web (compiled to WebAssembly by Trunk)
+leptos = { version = "0.8", features = ["csr"] }
+leptos_router = "0.8"
+gloo-net = { version = "0.6", features = ["http", "json"] }
+console_error_panic_hook = "0.1"
